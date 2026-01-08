@@ -16,7 +16,7 @@
         margin: 0;
       }
       #root:empty::before {
-        content: 'جاري تحميل المنصة...';
+        content: 'جاري تشغيل المنصة...';
         display: flex;
         justify-content: center;
         align-items: center;
@@ -25,13 +25,17 @@
         color: #4f46e5;
       }
     </style>
+    <script>
+      // تعريف بيئة العمل لمنع أخطاء المكتبات التي تتوقع وجود Node.js
+      window.process = { env: { NODE_ENV: 'production' } };
+    </script>
     <script type="importmap">
 {
   "imports": {
     "react": "https://esm.sh/react@18.2.0",
     "react-dom": "https://esm.sh/react-dom@18.2.0",
     "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
-    "lucide-react": "https://esm.sh/lucide-react@0.284.0",
+    "lucide-react": "https://esm.sh/lucide-react@0.344.0?external=react",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
     "react/": "https://esm.sh/react@^19.2.3/"
   }
