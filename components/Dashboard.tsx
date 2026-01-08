@@ -3,20 +3,9 @@ import React from 'react';
 import { MOCK_PRODUCTS } from '../data.ts';
 import ProductCard from './ProductCard.tsx';
 import { TrendingUp, Users, Eye, BarChart3, ArrowUpRight, Zap } from 'lucide-react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-
-const chartData = [
-  { name: 'السبت', value: 400 },
-  { name: 'الأحد', value: 300 },
-  { name: 'الاثنين', value: 600 },
-  { name: 'الثلاثاء', value: 800 },
-  { name: 'الأربعاء', value: 500 },
-  { name: 'الخميس', value: 900 },
-  { name: 'الجمعة', value: 1100 },
-];
 
 const StatCard: React.FC<{ title: string, value: string, icon: React.ReactNode, growth: string, isPositive: boolean }> = ({ title, value, icon, growth, isPositive }) => (
-  <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+  <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
     <div className="flex items-center justify-between mb-4">
       <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">{icon}</div>
       <div className={`flex items-center gap-1 text-xs font-bold ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
@@ -28,65 +17,78 @@ const StatCard: React.FC<{ title: string, value: string, icon: React.ReactNode, 
   </div>
 );
 
+const CustomChart = () => (
+  <div className="w-full h-48 flex items-end gap-2 px-2">
+    {[40, 70, 45, 90, 65, 80, 100].map((height, i) => (
+      <div key={i} className="flex-1 flex flex-col items-center gap-2 group">
+        <div 
+          className="w-full bg-indigo-100 group-hover:bg-indigo-500 transition-all rounded-t-lg relative" 
+          style={{ height: `${height}%` }}
+        >
+          <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+            {height}%
+          </div>
+        </div>
+        <span className="text-[10px] text-gray-400 font-bold">
+          {['سبت', 'أحد', 'اثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة'][i]}
+        </span>
+      </div>
+    ))}
+  </div>
+);
+
 const Dashboard: React.FC = () => {
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       <div>
         <h1 className="text-3xl font-extrabold text-gray-900">نظرة عامة</h1>
-        <p className="text-gray-500 mt-1">مرحباً بك مجدداً، إليك ما يحدث في السوق اليوم</p>
+        <p className="text-gray-500 mt-1">مرحباً بك مجدداً في لوحة تحكم Minea AR</p>
       </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard title="الإعلانات المكتشفة" value="1,450,230" icon={<Zap size={20} />} growth="12.5%" isPositive={true} />
-        <StatCard title="المنتجات الرائجة اليوم" value="842" icon={<TrendingUp size={20} />} growth="24.1%" isPositive={true} />
+        <StatCard title="الإعلانات المكتشفة" value="1.4M" icon={<Zap size={20} />} growth="12.5%" isPositive={true} />
+        <StatCard title="المنتجات الرائجة" value="842" icon={<TrendingUp size={20} />} growth="24.1%" isPositive={true} />
         <StatCard title="مشاهدات السوق" value="45.2M" icon={<Eye size={20} />} growth="8.4%" isPositive={true} />
-        <StatCard title="عدد المعلنين النشطين" value="12,400" icon={<Users size={20} />} growth="2.3%" isPositive={false} />
+        <StatCard title="المعلنون" value="12.4K" icon={<Users size={20} />} growth="2.3%" isPositive={false} />
       </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
-          <div className="h-64 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData}>
-                <defs>
-                  <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.1}/>
-                    <stop offset="95%" stopColor="#4f46e5" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8' }} />
-                <YAxis hide />
-                <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }} />
-                <Area type="monotone" dataKey="value" stroke="#4f46e5" strokeWidth={3} fillOpacity={1} fill="url(#colorValue)" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
+          <h3 className="font-bold text-lg mb-8 flex items-center gap-2">
+            <BarChart3 className="text-indigo-600" />
+            نمو السوق الأسبوعي
+          </h3>
+          <CustomChart />
         </div>
+
         <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
-          <h3 className="font-bold text-lg mb-6">المنصات الأكثر نشاطاً</h3>
+          <h3 className="font-bold text-lg mb-6">أداء المنصات</h3>
           <div className="space-y-6">
-            {['TikTok', 'Facebook', 'Instagram'].map((p, i) => (
-              <div key={p} className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center text-white text-[10px]">{p[0]}</div>
-                <div className="flex-1">
-                  <div className="flex justify-between text-sm mb-1">
-                    <span className="font-bold">{p}</span>
-                    <span className="text-gray-500">{45 - i * 10}%</span>
-                  </div>
-                  <div className="w-full h-2 bg-gray-50 rounded-full overflow-hidden">
-                    <div className="h-full bg-indigo-600" style={{ width: `${45 - i * 10}%` }} />
-                  </div>
+            {[
+              { label: 'TikTok', color: 'bg-black', val: 85 },
+              { label: 'Facebook', color: 'bg-blue-600', val: 65 },
+              { label: 'Instagram', color: 'bg-pink-600', val: 45 }
+            ].map((p) => (
+              <div key={p.label}>
+                <div className="flex justify-between text-sm mb-2">
+                  <span className="font-bold">{p.label}</span>
+                  <span className="text-gray-500">%{p.val}</span>
+                </div>
+                <div className="w-full h-2 bg-gray-50 rounded-full overflow-hidden">
+                  <div className={`${p.color} h-full`} style={{ width: `${p.val}%` }} />
                 </div>
               </div>
             ))}
           </div>
         </div>
       </div>
+
       <div>
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">المنتجات الرائجة الآن 🔥</h2>
-        </div>
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">المنتجات الرائجة الآن 🔥</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {MOCK_PRODUCTS.slice(0, 4).map(product => <ProductCard key={product.id} product={product} />)}
+          {MOCK_PRODUCTS.slice(0, 4).map(product => (
+            <ProductCard key={product.id} product={product} />
+          ))}
         </div>
       </div>
     </div>
